@@ -22,6 +22,10 @@ function App() {
     fetchPdfInfo();
   }, [fetchPdfInfo])
 
+  useEffect(() => {
+    document.body.setAttribute("oncontextmenu", "return false");
+  })
+
   const onNextPage = useCallback(() => {
     if (currentPage == totalPages) {
       return;
