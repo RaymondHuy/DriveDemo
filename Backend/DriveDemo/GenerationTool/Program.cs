@@ -8,10 +8,6 @@ namespace GenerationTool
     {
         static void Main(string[] args)
         {
-            double angle = 320;
-
-
-
             string fileNameWithExtension = "Old_Street_Complete_Application.pdf";
             string filePath = Path.Combine(Directory.GetCurrentDirectory(), fileNameWithExtension);
             string newFileGeneration = $"{Path.GetFileNameWithoutExtension(fileNameWithExtension)}_Generate.pdf";
@@ -41,6 +37,7 @@ namespace GenerationTool
                     var gfx = XGraphics.FromPdfPage(inputDocument.Pages[idx], XGraphicsPdfPageOptions.Append);
 
                     int emSize = 100;
+                    double angle = -Math.Atan(page.Height / page.Width) * 180 / Math.PI;
                     while (emSize > 0)
                     {
                         XFont tempFont = new XFont("Times New Roman", emSize, XFontStyle.BoldItalic);
@@ -62,19 +59,19 @@ namespace GenerationTool
                         throw new Exception("Can not set size watermark");
                     }
 
-                    XFont font = new XFont("Times New Roman", emSize, XFontStyle.BoldItalic);
+                    XFont font = new XFont("Times New Roman", emSize, XFontStyle.Regular);
 
                     var size = gfx.MeasureString(watermark, font);
                     gfx.TranslateTransform(page.Width / 2, page.Height / 2);
-                    //gfx.RotateTransform(-Math.Atan(page.Height / page.Width) * 180 / Math.PI);
-                    gfx.RotateTransform(angle);
+                    gfx.RotateTransform(-Math.Atan(page.Height / page.Width) * 180 / Math.PI);
+                    //gfx.RotateTransform(angle);
                     gfx.TranslateTransform(-page.Width / 2, -page.Height / 2);
                     var format = new XStringFormat();
                     format.Alignment = XStringAlignment.Near;
                     format.LineAlignment = XLineAlignment.Near;
 
                     // Create a dimmed red brush.
-                    XBrush brush = new XSolidBrush(XColor.FromArgb(128, 255, 0, 0));
+                    XBrush brush = new XSolidBrush(XColor.FromArgb(10, 255, 0, 0));
                     var point = new XPoint((page.Width - size.Width) / 2, (page.Height - size.Height) / 2);
                     // Draw the string.
                     gfx.DrawString(watermark, font, brush, point, format);
